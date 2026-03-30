@@ -4,9 +4,25 @@
 
 INPUT=$(cat)
 
-# Extract context window percentage (default to 100 if not yet available)
-REMAINING=$(echo "$INPUT" | jq '.context_window.remaining_percentage // 100' 2>/dev/null)
-REMAINING=${REMAINING:-100}
+# If CLAUDE_SMOKE_MAX_CONTEXT is set (in K tokens), recalculate remaining %
+# against that cap instead of the model's full context window.
+if [ -n "$CLAUDE_SMOKE_MAX_CONTEXT" ]; then
+  MAX_TOKENS=$(( CLAUDE_SMOKE_MAX_CONTEXT * 1000 ))
+  USED=$(echo "$INPUT" | jq '
+    .context_window.current_usage //
+    { input_tokens: 0, cache_creation_input_tokens: 0, cache_read_input_tokens: 0 } |
+    (.input_tokens // 0) + (.cache_creation_input_tokens // 0) + (.cache_read_input_tokens // 0)
+  ' 2>/dev/null)
+  USED=${USED:-0}
+  if [ "$MAX_TOKENS" -gt 0 ] 2>/dev/null; then
+    REMAINING=$(( (MAX_TOKENS - USED) * 100 / MAX_TOKENS ))
+  else
+    REMAINING=100
+  fi
+else
+  REMAINING=$(echo "$INPUT" | jq '.context_window.remaining_percentage // 100' 2>/dev/null)
+  REMAINING=${REMAINING:-100}
+fi
 
 # Clamp to integer 0-100
 REMAINING=$(printf '%.0f' "$REMAINING" 2>/dev/null)

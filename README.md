@@ -35,6 +35,18 @@ Then run the setup skill to activate the status line:
 
 This adds the `statusLine` entry to your `~/.claude/settings.json`. It's needed because plugin `settings.json` only supports the `agent` key — `statusLine` is silently ignored.
 
+## Configuration
+
+### Custom context window size
+
+By default the cigarette burns relative to the model's full context window (e.g. 1M tokens). If you want it sized to a smaller budget, set `CLAUDE_SMOKE_MAX_CONTEXT` to a value in thousands of tokens:
+
+```bash
+export CLAUDE_SMOKE_MAX_CONTEXT=300  # treat 300K as 100%
+```
+
+With this set and 30K tokens used, the cigarette shows 90% remaining instead of 97%.
+
 ## Manual Install
 
 Copy `cigarette.sh` somewhere on your machine and add to your `~/.claude/settings.json`:
