@@ -1,0 +1,49 @@
+name: Bump patch version
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    # Skip if the last commit was a version bump (prevent infinite loop)
+    if: "!contains(github.event.head_commit.message, 'chore: bump version')"
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Bump patch version in plugin files
+        id: bump
+        run: |
+          CURRENT=$(jq -r '.version' .claude-plugin/plugin.json)
+
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT"
+          NEW_VERSION="${MAJOR}.${MINOR}.$((PATCH + 1))"
+
+          echo "Bumping $CURRENT -> $NEW_VERSION"
+          echo "new_version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
+
+          jq --arg v "$NEW_VERSION" '.version = $v' .claude-plugin/plugin.json > tmp.json && mv tmp.json .claude-plugin/plugin.json
+          jq --arg v "$NEW_VERSION" '.plugins[0].version = $v' .claude-plugin/marketplace.json > tmp.json && mv tmp.json .claude-plugin/marketplace.json
+
+      - name: Create PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH="chore/bump-version-${{ steps.bump.outputs.new_version }}"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add .claude-plugin/plugin.json .claude-plugin/marketplace.json
+          git commit -m "chore: bump version to ${{ steps.bump.outputs.new_version }}"
+          git push -u origin "$BRANCH"
+
+          gh pr create \
+            --title "chore: bump version to ${{ steps.bump.outputs.new_version }}" \
+            --body "Automated patch version bump." \
+            --base main \
+            --head "$BRANCH"
