@@ -100,5 +100,28 @@ if [ "$BODY_LEN" -lt "$MAX_LEN" ]; then
   done
 fi
 
-# Layout: XX%  |░filter░|[▓▓▓body▓▓▓]|[burn] [smoke →]
-printf '%d%%  %s%s|%s %s' "$REMAINING" "$FILTER" "$BODY" "$BURN" "$SMOKE"
+# Flavor text when halfway through or more
+QUIP=""
+if [ "$REMAINING" -le 50 ]; then
+  QUIPS=(
+    "you're really giving it to me good"
+    "what a sesh..."
+    "paint me like one of your french girls"
+    "I needed that"
+    "drag me harder"
+    "don't stop now"
+    "we're in deep"
+    "this one's going down smooth"
+    "puff puff pass... the context"
+    "burning the midnight tokens"
+    "inhale the knowledge"
+    "almost down to the filter"
+    "worth every token"
+    "they don't make 'em like they used to"
+    "light me another"
+  )
+  QUIP="  ${QUIPS[$(( RANDOM % ${#QUIPS[@]} ))]}"
+fi
+
+# Layout: XX%  |░filter░|[▓▓▓body▓▓▓]|[burn] [smoke →] [quip]
+printf '%d%%  %s%s|%s %s%s' "$REMAINING" "$FILTER" "$BODY" "$BURN" "$SMOKE" "$QUIP"
