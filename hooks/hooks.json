@@ -1,6 +1,0 @@
-{
-  "statusLine": {
-    "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/cigarette.sh\"",
-    "type": "command"
-  }
-}
