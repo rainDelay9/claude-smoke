@@ -1,0 +1,8 @@
+{
+  "name": "claude-smoke",
+  "description": "ASCII cigarette status line that burns down as your context window is consumed",
+  "version": "1.0.0",
+  "author": {
+    "name": "raindelay9"
+  }
+}
