@@ -27,14 +27,22 @@ An ASCII cigarette for your Claude Code status line that burns down as your cont
 /plugin install claude-smoke@claude-smoke
 ```
 
+Then run the setup skill to activate the status line:
+
+```
+/smoke-setup
+```
+
+This adds the `statusLine` entry to your `~/.claude/settings.json`. It's needed because plugin `settings.json` only supports the `agent` key — `statusLine` is silently ignored.
+
 ## Manual Install
 
-Copy `hooks/cigarette.sh` to `~/.claude/hooks/` and add to your `~/.claude/settings.json`:
+Copy `cigarette.sh` somewhere on your machine and add to your `~/.claude/settings.json`:
 
 ```json
 {
   "statusLine": {
-    "command": "~/.claude/hooks/cigarette.sh",
+    "command": "/path/to/cigarette.sh",
     "type": "command"
   }
 }
