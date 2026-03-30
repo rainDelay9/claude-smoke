@@ -1,4 +1,5 @@
 {
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "claude-smoke",
   "owner": {
     "name": "raindelay9"
@@ -6,8 +7,15 @@
   "plugins": [
     {
       "name": "claude-smoke",
-      "source": ".",
-      "description": "ASCII cigarette status line that burns down as your context window is consumed"
+      "source": "./",
+      "description": "ASCII cigarette status line that burns down as your context window is consumed",
+      "version": "1.0.0",
+      "author": {
+        "name": "raindelay9"
+      },
+      "homepage": "https://github.com/rainDelay9/claude-smoke",
+      "repository": "https://github.com/rainDelay9/claude-smoke",
+      "category": "productivity"
     }
   ]
 }
