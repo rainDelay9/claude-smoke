@@ -37,6 +37,10 @@ jobs:
 
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Clean up stale branch/PR from a previous failed run
+          git push origin --delete "$BRANCH" 2>/dev/null || true
+
           git checkout -b "$BRANCH"
           git add .claude-plugin/plugin.json .claude-plugin/marketplace.json
           git commit -m "chore: bump version to ${{ steps.bump.outputs.new_version }}"
