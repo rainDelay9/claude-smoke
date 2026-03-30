@@ -22,12 +22,12 @@ The claude-smoke plugin provides a status line script (`cigarette.sh`) that rend
 {
   "statusLine": {
     "type": "command",
-    "command": "${CLAUDE_PLUGIN_ROOT}/cigarette.sh"
+    "command": "~/.claude/plugins/marketplaces/claude-smoke/cigarette.sh"
   }
 }
 ```
 
-Where `${CLAUDE_PLUGIN_ROOT}` is replaced with the actual resolved path to the plugin's install location. Find it by looking for `cigarette.sh` under `~/.claude/plugins/cache/claude-smoke/`.
+Use the marketplaces path (not the versioned cache path) so it always points to the latest version without needing to re-run setup after updates.
 
 4. Write the updated settings back to `~/.claude/settings.json`
 5. Tell the user the status line is installed and will appear after the next assistant response
